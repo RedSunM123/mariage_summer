@@ -1,9 +1,22 @@
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pen</title>
+  </head>
+  <body>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitation</title>
+    <title>Invitation EVJF</title>
     <style>
         body { 
             text-align: center; 
@@ -15,7 +28,6 @@
             align-items: center;
             min-height: 100vh;
             font-family: sans-serif;
-            touch-action: none; 
         }
 
         .invitation-container {
@@ -27,7 +39,7 @@
             overflow: hidden;
             line-height: 0; 
             background-color: #ffffff; 
-            padding: 30px 20px 120px 20px; 
+            padding: 30px 20px 130px 20px; 
             box-sizing: border-box;
         }
 
@@ -44,13 +56,12 @@
             bottom: 0; 
             left: 0;
             width: 100%;
-            height: 110px; 
+            height: 120px; 
             line-height: normal;
             background-color: #ffffff; 
         }
 
         button { 
-            /* Dimensions strictement identiques pour les deux boutons */
             width: 90px;
             height: 35px;
             padding: 0; 
@@ -72,12 +83,6 @@
             top: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 10;
-            transition: transform 0.1s ease;
-        }
-
-        #oui:hover {
-            background-color: #172554;
-            transform: translateX(-50%) scale(1.05); 
         }
 
         #non { 
@@ -85,40 +90,26 @@
             color: #64748b; 
             left: 50%;
             transform: translateX(-50%);
-            top: 55px; 
+            top: 60px; 
             border: 1px solid #cbd5e1;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* --- ZONE TACTILE INVISIBLE POUR LE BOUTON NON --- */
-        /* Crée une zone de détection élargie sans modifier la taille visuelle du bouton */
-        #non::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            background: transparent;
         }
     </style>
 </head>
 <body>
 
     <div class="invitation-container">
-        <!-- N'oubliez pas de remettre votre lien d'image ici -->
+        <!-- REMPLACEZ LE TEXTE DANS SRC PAR VOTRE LIEN D'IMAGE DIRECT -->
         <img class="canva-img" src="https://i.postimg.cc/44M0trSs/Invitation-Soiree-Anniversaire-Moderne-Elegant-Rose-et-Vert.png" alt="Invitation">
         
         <div class="button-area">
             <button id="oui" onclick="confirmer()">OUI !</button>
-            <button id="non" onmouseover="fuite()" ontouchstart="fuite(event)" ontouchend="event.preventDefault()" onclick="fuite(event)">NON</button>
+            <button id="non" onmouseover="fuite()" ontouchstart="fuite()">NON</button>
         </div>
     </div>
 
     <script>
-        function fuite(e) {
-            if(e) e.preventDefault();
-
+        function fuite() {
             var btnNon = document.getElementById('non');
             var zone = document.querySelector('.button-area');
             
@@ -128,13 +119,15 @@
             var randomX = Math.floor(Math.random() * maxW);
             var randomY = Math.floor(Math.random() * maxH);
             
+            if (randomY < 15) randomY = 25;
+
             btnNon.style.transform = 'none'; 
             btnNon.style.left = randomX + 'px';
             btnNon.style.top = randomY + 'px';
         }
 
         function confirmer() {
-            alert('Évidemment ! Hâte de t'y retrouver !✨');
+            alert('Évidemment ! Hâte de t\'y retrouver !✨');
         }
     </script>
 </body>
