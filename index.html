@@ -5,71 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitation Mariage</title>
     <style>
-        /* Optimisation pour téléphones : pas de défilement, tout reste centré */
-        html, body {
-            height: 100%;
+        body { 
+            text-align: center; 
             margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #f4f4f5;
+            padding: 20px;
+            background-color: #f4f4f5; 
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             font-family: sans-serif;
+            /* Empêche les gestes de glissement par défaut sur mobile pour éviter les bugs */
+            touch-action: none; 
         }
 
-        /* Conteneur adapté à la taille de l'écran du téléphone */
         .invitation-container {
             position: relative;
-            width: 90vw;
-            height: 90vh;
-            max-width: 450px; /* Taille maximale pour garder le format carte */
-            max-height: 100vh;
+            max-width: 450px; 
+            width: 100%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            border-radius: 12px;
+            overflow: hidden;
+            line-height: 0; 
         }
 
-        /* L'image prend tout l'écran du téléphone */
         .canva-img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
             display: block;
         }
 
-        /* --- ZONE DES BOUTONS PAR-DESSUS L'IMAGE (TOUT EN BAS) --- */
+        /* --- ZONE DES BOUTONS PAR-DESSUS L'IMAGE --- */
         .button-area { 
             position: absolute;
-            bottom: 15px; /* Collé au plus bas de l'écran du téléphone */
+            bottom: 5px; 
             left: 0;
             width: 100%;
-            height: 90px; /* Zone restreinte pour que le bouton reste en bas */
+            height: 110px; 
+            line-height: normal;
         }
 
-        /* Boutons plus petits et adaptés aux doigts */
         button { 
-            padding: 10px 25px; /* Taille réduite */
-            font-size: 14px; /* Écriture plus petite */
+            padding: 8px 22px; 
+            font-size: 12px; 
             cursor: pointer; 
             border-radius: 20px; 
             border: none;
             font-weight: bold;
             letter-spacing: 1px;
             position: absolute;
-            /* Empêche le zoom automatique sur certains téléphones lors du clic */
-            touch-action: manipulation; 
         }
 
         #oui { 
-            background-color: #1e3a8a; /* Votre bleu marine */
+            background-color: #1e3a8a; 
             color: white; 
             left: 50%;
             transform: translateX(-50%); 
-            top: 5px; /* Positionné plus bas dans la zone */
+            top: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 10;
+            transition: transform 0.1s ease;
+        }
+
+        #oui:hover {
+            background-color: #172554;
+            transform: translateX(-50%) scale(1.05); 
         }
 
         #non { 
@@ -77,36 +77,46 @@
             color: #64748b; 
             left: 50%;
             transform: translateX(-50%);
-            top: 50px; /* Juste en dessous du OUI au départ */
+            top: 50px; 
             border: 1px solid #cbd5e1;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            
+            /* --- OPTIMISATION TACTILE MOBILE --- */
+            /* Ajoute une zone invisible de 20px tout autour pour détecter le doigt de loin */
+            border: 20px solid transparent; 
+            background-clip: padding-box; 
+            /* Annule l'effet de zoom ou double-tap natif des téléphones */
+            touch-action: manipulation; 
         }
     </style>
 </head>
 <body>
 
     <div class="invitation-container">
-        <!-- N'OUBLIEZ PAS DE REMPLACER CE LIEN PAR VOTRE LIEN D'IMAGE CANVA (POSTIMAGES) -->
+        <!-- REMPLACEZ LE TEXTE DANS SRC PAR VOTRE LIEN D'IMAGE DIRECT -->
         <img class="canva-img" src="https://i.postimg.cc/44M0trSs/Invitation-Soiree-Anniversaire-Moderne-Elegant-Rose-et-Vert.png" alt="Invitation">
         
-        <!-- Zone tactile pour le mobile -->
         <div class="button-area">
             <button id="oui" onclick="confirmer()">OUI !</button>
-            <!-- Déclenchement tactile (touchstart) ajouté pour la réactivité sur mobile -->
-            <button id="non" onmouseover="fuite()" ontouchstart="fuite()" onclick="fuite()">NON</button>
+            <!-- Événements tactiles (touchstart/touchend) intégrés pour une fuite immédiate au doigt -->
+            <button id="non" onmouseover="fuite()" ontouchstart="fuite(event)" ontouchend="event.preventDefault()" onclick="fuite(event)">NON</button>
         </div>
     </div>
 
     <script>
-        function fuite() {
+        function fuite(e) {
+            // Empêche le comportement par défaut du téléphone (comme cliquer par erreur pendant la fuite)
+            if(e) {
+                e.preventDefault();
+            }
+
             var btnNon = document.getElementById('non');
             var zone = document.querySelector('.button-area');
             
-            // Calcul des positions restreintes à la zone du bas de l'écran
-            var maxW = zone.clientWidth - btnNon.clientWidth;
-            var maxH = zone.clientHeight - btnNon.clientHeight;
+            // Prend en compte la zone invisible agrandie pour ne pas déborder de l'écran
+            var maxW = zone.clientWidth - btnNon.offsetWidth;
+            var maxH = zone.clientHeight - btnNon.offsetHeight;
             
-            // On s'assure que le bouton reste dans les limites gauche-droite et basse
             var randomX = Math.floor(Math.random() * maxW);
             var randomY = Math.floor(Math.random() * maxH);
             
