@@ -1,73 +1,75 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitation Mariage</title>
     <style>
-        body { 
-            text-align: center; 
+        /* Optimisation pour téléphones : pas de défilement, tout reste centré */
+        html, body {
+            height: 100%;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f5; 
+            padding: 0;
+            overflow: hidden;
+            background-color: #f4f4f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             font-family: sans-serif;
         }
 
+        /* Conteneur adapté à la taille de l'écran du téléphone */
         .invitation-container {
             position: relative;
-            max-width: 450px; 
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
+            max-width: 450px; /* Taille maximale pour garder le format carte */
+            max-height: 100vh;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: 12px;
-            overflow: hidden;
-            line-height: 0; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
+        /* L'image prend tout l'écran du téléphone */
         .canva-img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
 
-        /* --- ZONE DES BOUTONS PAR-DESSUS L'IMAGE --- */
+        /* --- ZONE DES BOUTONS PAR-DESSUS L'IMAGE (TOUT EN BAS) --- */
         .button-area { 
             position: absolute;
-            bottom: 5px; 
+            bottom: 15px; /* Collé au plus bas de l'écran du téléphone */
             left: 0;
             width: 100%;
-            height: 120px; 
-            line-height: normal;
+            height: 90px; /* Zone restreinte pour que le bouton reste en bas */
         }
 
+        /* Boutons plus petits et adaptés aux doigts */
         button { 
-            padding: 12px 35px; 
-            font-size: 15px; 
+            padding: 10px 25px; /* Taille réduite */
+            font-size: 14px; /* Écriture plus petite */
             cursor: pointer; 
-            border-radius: 25px; 
+            border-radius: 20px; 
             border: none;
             font-weight: bold;
             letter-spacing: 1px;
             position: absolute;
-            transition: transform 0.1s ease;
+            /* Empêche le zoom automatique sur certains téléphones lors du clic */
+            touch-action: manipulation; 
         }
 
         #oui { 
-            background-color: #1e3a8a; /* Bleu marine élégant */
+            background-color: #1e3a8a; /* Votre bleu marine */
             color: white; 
             left: 50%;
             transform: translateX(-50%); 
-            top: 10px;
+            top: 5px; /* Positionné plus bas dans la zone */
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 10;
-        }
-
-        #oui:hover {
-            background-color: #172554; /* Bleu plus foncé au survol */
-            transform: translateX(-50%) scale(1.05); 
         }
 
         #non { 
@@ -75,7 +77,7 @@
             color: #64748b; 
             left: 50%;
             transform: translateX(-50%);
-            top: 65px; 
+            top: 50px; /* Juste en dessous du OUI au départ */
             border: 1px solid #cbd5e1;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -84,12 +86,14 @@
 <body>
 
     <div class="invitation-container">
-        <!-- REMPLACEZ LE TEXTE DANS SRC PAR VOTRE LIEN D'IMAGE DIRECT (FINISSANT PAR .PNG OU .JPG) -->
+        <!-- N'OUBLIEZ PAS DE REMPLACER CE LIEN PAR VOTRE LIEN D'IMAGE CANVA (POSTIMAGES) -->
         <img class="canva-img" src="https://i.postimg.cc/44M0trSs/Invitation-Soiree-Anniversaire-Moderne-Elegant-Rose-et-Vert.png" alt="Invitation">
         
+        <!-- Zone tactile pour le mobile -->
         <div class="button-area">
             <button id="oui" onclick="confirmer()">OUI !</button>
-            <button id="non" onmouseover="fuite()" onclick="fuite()">NON</button>
+            <!-- Déclenchement tactile (touchstart) ajouté pour la réactivité sur mobile -->
+            <button id="non" onmouseover="fuite()" ontouchstart="fuite()" onclick="fuite()">NON</button>
         </div>
     </div>
 
@@ -98,9 +102,11 @@
             var btnNon = document.getElementById('non');
             var zone = document.querySelector('.button-area');
             
+            // Calcul des positions restreintes à la zone du bas de l'écran
             var maxW = zone.clientWidth - btnNon.clientWidth;
             var maxH = zone.clientHeight - btnNon.clientHeight;
             
+            // On s'assure que le bouton reste dans les limites gauche-droite et basse
             var randomX = Math.floor(Math.random() * maxW);
             var randomY = Math.floor(Math.random() * maxH);
             
@@ -110,7 +116,7 @@
         }
 
         function confirmer() {
-            alert('Évidemment ! Hâte de t’y retrouver !✨');
+            alert('Évidemment ! Le plus bel été de notre vie commence avec vous. 🌊✨');
         }
     </script>
 </body>
