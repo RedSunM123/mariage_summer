@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Invitation EVJF</title>
     <style>
         body { 
@@ -15,7 +15,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: sans-serif;
-            touch-action: none; 
+            touch-action: none; /* Bloque le scroll natif pour laisser le script agir */
         }
 
         .invitation-container {
@@ -27,7 +27,7 @@
             overflow: hidden;
             line-height: 0; 
             background-color: #ffffff; 
-            padding: 30px 20px 120px 20px; 
+            padding: 30px 20px 130px 20px; 
             box-sizing: border-box;
         }
 
@@ -44,13 +44,12 @@
             bottom: 0; 
             left: 0;
             width: 100%;
-            height: 110px; 
+            height: 120px; 
             line-height: normal;
             background-color: #ffffff; 
         }
 
         button { 
-            /* Dimensions strictement identiques pour les deux boutons */
             width: 90px;
             height: 35px;
             padding: 0; 
@@ -85,20 +84,20 @@
             color: #64748b; 
             left: 50%;
             transform: translateX(-50%);
-            top: 55px; 
+            top: 60px; 
             border: 1px solid #cbd5e1;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            touch-action: none; /* Force le téléphone à ignorer le comportement tactile par défaut */
         }
 
-        /* --- ZONE TACTILE INVISIBLE POUR LE BOUTON NON --- */
-        /* Crée une zone de détection élargie sans modifier la taille visuelle du bouton */
+        /* Zone tactile invisible pour le bouton NON */
         #non::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
+            top: -25px;
+            left: -25px;
+            right: -25px;
+            bottom: -25px;
             background: transparent;
         }
     </style>
@@ -111,27 +110,41 @@
         
         <div class="button-area">
             <button id="oui" onclick="confirmer()">OUI !</button>
-            <button id="non" onmouseover="fuite()" ontouchstart="fuite(event)" ontouchend="event.preventDefault()" onclick="fuite(event)">NON</button>
+            <button id="non">NON</button>
         </div>
     </div>
 
     <script>
-        function fuite(e) {
-            if(e) e.preventDefault();
+        const btnNon = document.getElementById('non');
+        const zone = document.querySelector('.button-area');
 
-            var btnNon = document.getElementById('non');
-            var zone = document.querySelector('.button-area');
+        // Fonction unique pour déplacer le bouton de manière fluide et aléatoire
+        function fuite(e) {
+            if(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             
-            var maxW = zone.clientWidth - btnNon.offsetWidth;
-            var maxH = zone.clientHeight - btnNon.offsetHeight;
+            // Calcul des coordonnées maximales autorisées
+            const maxW = zone.clientWidth - btnNon.offsetWidth;
+            const maxH = zone.clientHeight - btnNon.offsetHeight;
             
-            var randomX = Math.floor(Math.random() * maxW);
-            var randomY = Math.floor(Math.random() * maxH);
+            // Génère une position aléatoire sécurisée
+            let randomX = Math.floor(Math.random() * maxW);
+            let randomY = Math.floor(Math.random() * maxH);
             
+            // Évite que le bouton se colle trop près du haut ou du bouton OUI au premier mouvement
+            if (randomY < 15) randomY = 20;
+
             btnNon.style.transform = 'none'; 
             btnNon.style.left = randomX + 'px';
             btnNon.style.top = randomY + 'px';
         }
+
+        // Écouteurs d'événements robustes pour ordinateur ET mobile
+        btnNon.addEventListener('mouseover', fuite);
+        btnNon.addEventListener('touchstart', fuite, { passive: false });
+        btnNon.addEventListener('click', fuite);
 
         function confirmer() {
             alert('Évidemment ! Hâte de t'y retrouver !✨');
