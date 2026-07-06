@@ -15,7 +15,6 @@
             align-items: center;
             min-height: 100vh;
             font-family: sans-serif;
-            /* Empêche les gestes de glissement par défaut sur mobile pour éviter les bugs */
             touch-action: none; 
         }
 
@@ -27,22 +26,29 @@
             border-radius: 12px;
             overflow: hidden;
             line-height: 0; 
+            
+            /* --- EFFET DÉZOOM ET BORDURE BLANCHE --- */
+            background-color: #ffffff; /* Fond blanc sur les bords */
+            padding: 30px 20px 120px 20px; /* Marges blanches (gauche/droite/haut et large en bas pour les boutons) */
+            box-sizing: border-box;
         }
 
         .canva-img {
-            width: 100%;
+            width: 100%; /* L'image s'adapte à la zone réduite par les marges blanches */
             height: auto;
             display: block;
+            border-radius: 6px; /* Optionnel : léger arrondi sur votre image dézoomée */
         }
 
-        /* --- ZONE DES BOUTONS PAR-DESSUS L'IMAGE --- */
+        /* --- ZONE DES BOUTONS (SUR LE FOND BLANC EN BAS) --- */
         .button-area { 
             position: absolute;
-            bottom: 5px; 
+            bottom: 0; 
             left: 0;
             width: 100%;
             height: 110px; 
             line-height: normal;
+            background-color: #ffffff; /* Assure que le fond sous les boutons reste blanc */
         }
 
         button { 
@@ -78,14 +84,11 @@
             left: 50%;
             transform: translateX(-50%);
             top: 50px; 
-            border: 1px solid #cbd5e1;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             
-            /* --- OPTIMISATION TACTILE MOBILE --- */
-            /* Ajoute une zone invisible de 20px tout autour pour détecter le doigt de loin */
+            /* Zone tactile invisible pour le mobile */
             border: 20px solid transparent; 
             background-clip: padding-box; 
-            /* Annule l'effet de zoom ou double-tap natif des téléphones */
             touch-action: manipulation; 
         }
     </style>
@@ -93,27 +96,22 @@
 <body>
 
     <div class="invitation-container">
-        <!-- REMPLACEZ LE TEXTE DANS SRC PAR VOTRE LIEN D'IMAGE DIRECT -->
+        <!-- N'oubliez pas de mettre votre lien d'image ici -->
         <img class="canva-img" src="https://i.postimg.cc/44M0trSs/Invitation-Soiree-Anniversaire-Moderne-Elegant-Rose-et-Vert.png" alt="Invitation">
         
         <div class="button-area">
             <button id="oui" onclick="confirmer()">OUI !</button>
-            <!-- Événements tactiles (touchstart/touchend) intégrés pour une fuite immédiate au doigt -->
             <button id="non" onmouseover="fuite()" ontouchstart="fuite(event)" ontouchend="event.preventDefault()" onclick="fuite(event)">NON</button>
         </div>
     </div>
 
     <script>
         function fuite(e) {
-            // Empêche le comportement par défaut du téléphone (comme cliquer par erreur pendant la fuite)
-            if(e) {
-                e.preventDefault();
-            }
+            if(e) e.preventDefault();
 
             var btnNon = document.getElementById('non');
             var zone = document.querySelector('.button-area');
             
-            // Prend en compte la zone invisible agrandie pour ne pas déborder de l'écran
             var maxW = zone.clientWidth - btnNon.offsetWidth;
             var maxH = zone.clientHeight - btnNon.offsetHeight;
             
